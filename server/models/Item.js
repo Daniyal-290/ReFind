@@ -4,28 +4,28 @@ const itemSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ['lost', 'found'],
-        required: [true, 'Item type (lost/found) is required']
+        required: true
     },
     title: {
         type: String,
-        required: [true, 'Title is required'],
+        required: true,
         trim: true,
-        maxlength: [100, 'Title cannot exceed 100 characters']
+        maxlength: 100
     },
     category: {
         type: String,
-        required: [true, 'Category is required'],
+        required: true,
         enum: ['Electronics', 'Documents/IDs', 'Keys', 'Bags/Wallets', 'Clothing', 'Books', 'Other']
     },
     location: {
         type: String,
-        required: [true, 'Location is required'],
+        required: true,
         trim: true
     },
     description: {
         type: String,
-        required: [true, 'Description is required'],
-        maxlength: [1000, 'Description cannot exceed 1000 characters']
+        required: true,
+        maxlength: 1000
     },
     image_url: {
         type: String,
@@ -41,13 +41,8 @@ const itemSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-}, {
-    timestamps: true
-});
+}, { timestamps: true });
 
-// Index for search functionality
 itemSchema.index({ title: 'text', description: 'text', location: 'text' });
 
-const Item = mongoose.model('Item', itemSchema);
-
-export default Item;
+export default mongoose.model('Item', itemSchema);

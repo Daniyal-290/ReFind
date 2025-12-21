@@ -64,11 +64,17 @@
     background: var(--color-bg-hover);
 }
 
+.nav-link.active {
+    color: var(--color-primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
 .nav-link-button {
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
+
 }
 
 .nav-link-admin {
@@ -115,6 +121,11 @@
 .mobile-nav-link:hover {
     color: var(--color-text-primary);
     background: var(--color-bg-hover);
+}
+
+.mobile-nav-link.active {
+    color: var(--color-primary);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .mobile-nav-button {

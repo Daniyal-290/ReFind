@@ -23,16 +23,11 @@ const claimSchema = new mongoose.Schema({
     },
     request_message: {
         type: String,
-        required: [true, 'Please provide a message explaining your claim'],
-        maxlength: [500, 'Message cannot exceed 500 characters']
+        required: true,
+        maxlength: 500
     }
-}, {
-    timestamps: true
-});
+}, { timestamps: true });
 
-// Prevent duplicate claims by same user on same item
-claimSchema.index({ item_id: 1, claimer_id: 1 }, { unique: true });
+claimSchema.index({ item_id: 1, claimer_id: 1 });
 
-const Claim = mongoose.model('Claim', claimSchema);
-
-export default Claim;
+export default mongoose.model('Claim', claimSchema);

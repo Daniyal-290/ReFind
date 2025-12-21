@@ -5,36 +5,17 @@ import { authLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
-// @route   POST /api/auth/signup
-// @desc    Register a new user
-// @access  Public
 router.post('/signup', authLimiter, async (req, res) => {
     try {
         const { username, email, password, contact_number } = req.body;
 
-        // Check if user already exists
-        const userExists = await User.findOne({
-            $or: [{ email }, { username }]
-        });
-
-        if (userExists) {
-            return res.status(400).json({
-                success: false,
-                message: userExists.email === email
-                    ? 'Email already registered'
-                    : 'Username already taken'
-            });
+        const exists = await User.findOne({ $or: [{ email }, { username }] });
+        if (exists) {
+            const msg = exists.email === email ? 'Email already registered' : 'Username taken';
+            return res.status(400).json({ success: false, message: msg });
         }
 
-        // Create user
-        const user = await User.create({
-            username,
-            email,
-            password,
-            contact_number
-        });
-
-        // Generate token and respond
+        const user = await User.create({ username, email, password, contact_number });
         const token = generateToken(user._id);
 
         res.status(201).json({
@@ -49,49 +30,23 @@ router.post('/signup', authLimiter, async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// @route   POST /api/auth/login
-// @desc    Login user & get token
-// @access  Public
 router.post('/login', authLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // Find user and include password field
         const user = await User.findOne({ email }).select('+password');
 
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
+        if (!user || !(await user.matchPassword(password))) {
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
-        // Check if user is banned
         if (user.isBanned) {
-            return res.status(403).json({
-                success: false,
-                message: 'Your account has been suspended. Please contact admin.'
-            });
+            return res.status(403).json({ success: false, message: 'Account suspended' });
         }
 
-        // Check password
-        const isMatch = await user.matchPassword(password);
-
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
-        }
-
-        // Generate token and respond
         const token = generateToken(user._id);
 
         res.json({
@@ -106,55 +61,31 @@ router.post('/login', authLimiter, async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// @route   GET /api/auth/me
-// @desc    Get current logged in user
-// @access  Private
 router.get('/me', protect, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-
-        res.json({
-            success: true,
-            data: user
-        });
+        res.json({ success: true, data: user });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// @route   PUT /api/auth/profile
-// @desc    Update user profile
-// @access  Private
 router.put('/profile', protect, async (req, res) => {
     try {
         const { username, contact_number } = req.body;
-
         const user = await User.findById(req.user._id);
 
         if (username) user.username = username;
         if (contact_number) user.contact_number = contact_number;
-
         await user.save();
 
-        res.json({
-            success: true,
-            data: user
-        });
+        res.json({ success: true, data: user });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 

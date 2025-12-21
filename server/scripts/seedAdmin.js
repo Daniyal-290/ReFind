@@ -4,25 +4,21 @@ import bcrypt from 'bcryptjs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, '..', '.env') });
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch(err => {
-        console.error('MongoDB connection error:', err);
+        console.error('MongoDB error:', err.message);
         process.exit(1);
     });
 
-// User Schema (inline to avoid import issues)
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    contact_number: { type: String },
+    contact_number: String,
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     isBanned: { type: Boolean, default: false }
 }, { timestamps: true });
@@ -31,22 +27,18 @@ const User = mongoose.model('User', userSchema);
 
 async function seedAdmin() {
     try {
-        // Check if admin already exists
-        const existingAdmin = await User.findOne({ email: 'admin@refind.com' });
+        const existing = await User.findOne({ email: 'admin@refind.com' });
 
-        if (existingAdmin) {
-            console.log('Admin user already exists!');
+        if (existing) {
+            console.log('Admin already exists');
             console.log('Email: admin@refind.com');
             console.log('Password: admin123');
             process.exit(0);
         }
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash('admin123', salt);
+        const hashedPassword = await bcrypt.hash('admin123', 10);
 
-        // Create admin user
-        const admin = await User.create({
+        await User.create({
             username: 'admin',
             email: 'admin@refind.com',
             password: hashedPassword,
@@ -54,15 +46,12 @@ async function seedAdmin() {
             role: 'admin'
         });
 
-        console.log('\n✅ Admin user created successfully!\n');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('📧 Email:    admin@refind.com');
-        console.log('🔑 Password: admin123');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-
+        console.log('Admin created!');
+        console.log('Email: admin@refind.com');
+        console.log('Password: admin123');
         process.exit(0);
     } catch (error) {
-        console.error('Error seeding admin:', error);
+        console.error('Error:', error.message);
         process.exit(1);
     }
 }
