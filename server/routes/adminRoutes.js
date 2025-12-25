@@ -11,11 +11,10 @@ router.use(adminOnly);
 
 router.get('/stats', async (req, res) => {
     try {
-        const [totalUsers, bannedUsers, totalItems, activeItems, resolvedItems, lostItems, foundItems, totalClaims, pendingClaims] = await Promise.all([
+        const [totalUsers, bannedUsers, totalItems, resolvedItems, lostItems, foundItems, totalClaims, pendingClaims] = await Promise.all([
             User.countDocuments({ role: 'user' }),
             User.countDocuments({ isBanned: true }),
             Item.countDocuments(),
-            Item.countDocuments({ status: 'active' }),
             Item.countDocuments({ status: 'resolved' }),
             Item.countDocuments({ type: 'lost' }),
             Item.countDocuments({ type: 'found' }),
@@ -27,7 +26,7 @@ router.get('/stats', async (req, res) => {
             success: true,
             data: {
                 users: { total: totalUsers, banned: bannedUsers },
-                items: { total: totalItems, active: activeItems, resolved: resolvedItems, lost: lostItems, found: foundItems },
+                items: { total: totalItems, resolved: resolvedItems, lost: lostItems, found: foundItems },
                 claims: { total: totalClaims, pending: pendingClaims }
             }
         });

@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post('/signup', authLimiter, async (req, res) => {
     try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         const { username, email, password, contact_number } = req.body;
 
         const exists = await User.findOne({ $or: [{ email }, { username }] });
