@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
+const DEV_MODE = false;
+const MOCK_USER = {
+    _id: 'dev123',
+    name: 'Dev User',
+    email: 'dev@test.com',
+    role: 'admin'
+};
+
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
@@ -12,8 +20,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(DEV_MODE ? MOCK_USER : null);
+    const [loading, setLoading] = useState(DEV_MODE ? false : true);
 
     useEffect(() => {
         const token = localStorage.getItem('token');

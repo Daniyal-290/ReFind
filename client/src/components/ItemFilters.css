@@ -9,7 +9,6 @@
     margin-bottom: var(--spacing-6);
 }
 
-/* Search Bar */
 .search-bar {
     position: relative;
     display: flex;
@@ -61,7 +60,7 @@
     background: var(--color-bg-hover);
 }
 
-/* Filter Controls */
+
 .filter-controls {
     display: flex;
     flex-wrap: wrap;
@@ -69,7 +68,6 @@
     align-items: center;
 }
 
-/* Type Toggle */
 .type-toggle {
     display: flex;
     gap: var(--spacing-2);
@@ -104,7 +102,6 @@
     color: var(--color-success-light);
 }
 
-/* Filter Select & Input */
 .filter-select,
 .filter-input {
     min-width: 150px;
@@ -112,7 +109,6 @@
     max-width: 200px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .filter-controls {
         flex-direction: column;

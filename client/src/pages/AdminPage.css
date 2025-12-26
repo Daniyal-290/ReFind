@@ -12,7 +12,6 @@
     color: var(--color-text-muted);
 }
 
-/* Admin Overview */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -160,7 +159,6 @@
     justify-content: center;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);

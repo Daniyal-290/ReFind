@@ -27,7 +27,6 @@
     flex-direction: column;
 }
 
-/* Type Selector */
 .type-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -70,7 +69,6 @@
     color: var(--color-text-primary);
 }
 
-/* Image Upload */
 .image-upload {
     display: flex;
     flex-direction: column;
@@ -105,7 +103,6 @@
     margin-top: var(--spacing-1);
 }
 
-/* Image Preview */
 .image-preview {
     position: relative;
     border-radius: var(--radius-xl);
@@ -137,7 +134,6 @@
     color: white;
 }
 
-/* Responsive */
 @media (max-width: 640px) {
     .post-item-container {
         padding: var(--spacing-5);

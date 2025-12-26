@@ -2,9 +2,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(10, 10, 15, 0.9);
+    background: rgba(47, 47, 56, 0.9);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
 }
 
 .navbar .container {
@@ -16,7 +15,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 150px;
 }
 
 .navbar-logo {
@@ -83,10 +82,9 @@
 
 .nav-link-admin:hover {
     color: var(--color-warning);
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(23, 76, 119, 0.76);
 }
 
-/* Mobile Menu Button */
 .mobile-menu-btn {
     display: none;
     padding: var(--spacing-2);
@@ -97,7 +95,6 @@
     cursor: pointer;
 }
 
-/* Mobile Menu */
 .mobile-menu {
     display: none;
     flex-direction: column;
@@ -137,7 +134,6 @@
     text-align: left;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .navbar-links {
         display: none;
